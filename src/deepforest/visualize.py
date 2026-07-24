@@ -305,6 +305,7 @@ def plot_annotations(
     radius: int = 3,
     image: np.typing.NDArray | str | Image.Image | None = None,
     show: bool = True,
+    ax: plt.Axes | None = None,
 ) -> plt.Figure:
     """Plot prediction results or ground truth annotations for a single image.
 
@@ -319,6 +320,7 @@ def plot_annotations(
         radius: Point radius
         image: Image array or path
         show: Whether to display the plot (default: True). Set to False for testing.
+        ax: Optional Matplotlib Axes to plot on; if None, a new figure and axis are created.
 
     Returns:
         matplotlib.figure.Figure: The figure object for further customization
@@ -333,7 +335,11 @@ def plot_annotations(
     image = _load_image(image, annotations, root_dir)
 
     # Plot results using supervision annotators
-    fig, ax = plt.subplots()
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.get_figure()
+
     annotated_scene = _plot_image_with_geometry(
         df=annotations,
         image=image,
@@ -373,11 +379,12 @@ def plot_results(
     image: np.typing.NDArray | str | Image.Image | None = None,
     axes: bool = False,
     show: bool = True,
+    ax: plt.Axes | None = None,
 ):
     """Plot predicted annotations with optional ground truth.
 
     Creates a figure that can be displayed or saved. Pass axes=True to return the
-    Matplotlib Axes for additional plotting.
+    Matplotlib Axes for additional plotting, or pass a pre-existing ax to plot into.
 
     Args:
         results: Pandas DataFrame of prediction results.
@@ -392,6 +399,7 @@ def plot_results(
         image: Optional NumPy array, image path, or PIL Image to annotate; if None, loaded from the results DataFrame.
         axes: If True, return the Matplotlib Axes object.
         show: Whether to display the plot (default: True). Set to False for testing.
+        ax: Optional Matplotlib Axes to plot on; if None, a new figure and axis are created.
 
     Returns:
         matplotlib.figure.Figure | matplotlib.axes.Axes: The Figure (default) or Axes (when axes=True).
@@ -408,7 +416,11 @@ def plot_results(
 
     image = _load_image(image, results)
 
-    fig, ax = plt.subplots()
+    if ax is None:
+        fig, ax = plt.subplots()
+    else:
+        fig = ax.get_figure()
+
     annotated_scene = _plot_image_with_geometry(
         df=results,
         image=image,

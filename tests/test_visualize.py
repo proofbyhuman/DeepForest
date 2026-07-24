@@ -239,3 +239,23 @@ def test_convert_to_sv_format_empty_dataframe():
 
     assert isinstance(result, sv.Detections)
     assert len(result) == 0
+
+
+def test_plot_annotations_custom_ax(gdf_box):
+    """Test plot_annotations with a custom Matplotlib Axes object."""
+    import matplotlib.pyplot as plt
+
+    fig, custom_ax = plt.subplots()
+    returned_fig = visualize.plot_annotations(gdf_box, ax=custom_ax, show=False)
+    assert returned_fig == fig
+    plt.close(fig)
+
+
+def test_plot_results_custom_ax(gdf_box):
+    """Test plot_results with a custom Matplotlib Axes object."""
+    import matplotlib.pyplot as plt
+
+    fig, custom_ax = plt.subplots()
+    returned_ax = visualize.plot_results(gdf_box, ax=custom_ax, axes=True, show=False)
+    assert returned_ax == custom_ax
+    plt.close(fig)
